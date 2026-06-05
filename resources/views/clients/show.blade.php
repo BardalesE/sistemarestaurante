@@ -1,80 +1,115 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container-fluid">
-    
-    <div class="d-flex align-items-center mb-4">
-        <a href="{{ route('clients.index') }}" class="btn btn-light border shadow-sm me-3"><i class="bi bi-arrow-left"></i> Volver</a>
+<div class="container-fluid px-0">
+
+    {{-- ── HEADER ──────────────────────────── --}}
+    <div class="d-flex align-items-center gap-3 mb-4">
+        <a href="{{ route('clients.index') }}"
+           class="btn btn-light border shadow-sm flex-shrink-0">
+            <i class="bi bi-arrow-left"></i>
+            <span class="d-none d-sm-inline ms-1">Volver</span>
+        </a>
         <div>
-            <h2 class="fw-bold text-dark mb-0">Perfil de Cliente</h2>
-            <p class="text-muted mb-0">Historial y preferencias</p>
+            <h4 class="fw-bold text-dark mb-0">Perfil de Cliente</h4>
+            <p class="text-muted mb-0 small">Historial y preferencias</p>
         </div>
     </div>
 
     <div class="row g-4">
-        
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm h-100 text-center">
-                <div class="card-body">
-                    <div class="mb-3 mt-2 position-relative d-inline-block">
-                        <div class="bg-light rounded-circle d-flex align-items-center justify-content-center text-primary fw-bold border" style="width: 100px; height: 100px; font-size: 3rem;">
-                            {{ substr($client->name, 0, 1) }}
+
+        {{-- ── CLIENT CARD ──────────────────── --}}
+        <div class="col-12 col-md-4">
+            <div class="card border-0 shadow-sm text-center">
+                <div class="card-body py-4">
+                    <div class="mb-3 position-relative d-inline-block">
+                        <div class="rounded-circle d-flex align-items-center justify-content-center fw-bold border mx-auto"
+                             style="width:90px;height:90px;font-size:2.5rem;background:#fadbd8;color:#c0392b;">
+                            {{ strtoupper(substr($client->name, 0, 1)) }}
                         </div>
-                        <span class="position-absolute bottom-0 end-0 badge rounded-pill bg-{{ $badgeColor }} border border-white shadow-sm" style="font-size: 0.9rem;">
+                        <span class="position-absolute bottom-0 end-0 badge rounded-pill bg-{{ $badgeColor }} border border-white shadow-sm"
+                              style="font-size:.85rem;">
                             {{ $rank }}
                         </span>
                     </div>
 
-                    <h4 class="fw-bold mb-1">{{ $client->name }}</h4>
+                    <h5 class="fw-bold mb-1">{{ $client->name }}</h5>
                     <p class="text-muted small mb-3">
-                        <i class="bi bi-geo-alt-fill text-danger"></i> {{ $client->address ?? 'Sin dirección' }}
+                        <i class="bi bi-geo-alt-fill text-danger me-1"></i>
+                        {{ $client->address ?? 'Sin dirección' }}
                     </p>
-                    
-                    <div class="row g-2 text-start bg-light p-3 rounded mx-1">
-                        <div class="col-12"><small class="text-muted fw-bold">DOCUMENTO:</small> <div class="float-end">{{ $client->document_number ?? '-' }}</div></div>
-                        <div class="col-12 border-top my-1"></div>
-                        <div class="col-12"><small class="text-muted fw-bold">TELÉFONO:</small> <div class="float-end">{{ $client->phone ?? '-' }}</div></div>
-                        <div class="col-12 border-top my-1"></div>
-                        <div class="col-12"><small class="text-muted fw-bold">EMAIL:</small> <div class="float-end text-break small">{{ $client->email ?? '-' }}</div></div>
+
+                    <div class="bg-light rounded-3 p-3 text-start">
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <small class="text-muted fw-bold">DOCUMENTO</small>
+                            <small class="fw-bold">{{ $client->document_number ?? '-' }}</small>
+                        </div>
+                        <div class="d-flex justify-content-between py-1 border-bottom">
+                            <small class="text-muted fw-bold">TELÉFONO</small>
+                            <small class="fw-bold">{{ $client->phone ?? '-' }}</small>
+                        </div>
+                        <div class="d-flex justify-content-between py-1">
+                            <small class="text-muted fw-bold">EMAIL</small>
+                            <small class="fw-bold text-truncate ms-2" style="max-width:160px;">
+                                {{ $client->email ?? '-' }}
+                            </small>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-8">
+        {{-- ── STATS + ORDERS ───────────────── --}}
+        <div class="col-12 col-md-8">
+
+            {{-- Stat cards --}}
             <div class="row g-3 mb-4">
-                <div class="col-md-4">
-                    <div class="card border-0 shadow-sm bg-primary text-white h-100">
-                        <div class="card-body">
-                            <small class="opacity-75 fw-bold text-uppercase">Total Gastado</small>
-                            <h3 class="fw-bold mb-0">S/ {{ number_format($totalSpent, 2) }}</h3>
+                <div class="col-4">
+                    <div class="card border-0 shadow-sm bg-danger text-white h-100">
+                        <div class="card-body py-3 px-3">
+                            <small class="opacity-75 fw-bold text-uppercase" style="font-size:.65rem;">
+                                Total Gastado
+                            </small>
+                            <h5 class="fw-bold mb-0 mt-1">S/{{ number_format($totalSpent, 2) }}</h5>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-4">
                     <div class="card border-0 shadow-sm bg-success text-white h-100">
-                        <div class="card-body">
-                            <small class="opacity-75 fw-bold text-uppercase">Visitas</small>
-                            <h3 class="fw-bold mb-0">{{ $visitCount }}</h3>
+                        <div class="card-body py-3 px-3">
+                            <small class="opacity-75 fw-bold text-uppercase" style="font-size:.65rem;">
+                                Visitas
+                            </small>
+                            <h5 class="fw-bold mb-0 mt-1">{{ $visitCount }}</h5>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-4">
                     <div class="card border-0 shadow-sm bg-warning text-dark h-100">
-                        <div class="card-body">
-                            <small class="opacity-75 fw-bold text-uppercase">Plato Favorito</small>
-                            <h5 class="fw-bold mb-0 text-truncate" title="{{ $favoriteProduct }}">{{ $favoriteProduct }}</h5>
+                        <div class="card-body py-3 px-3">
+                            <small class="fw-bold text-uppercase" style="font-size:.65rem;">
+                                Plato Fav.
+                            </small>
+                            <div class="fw-bold mt-1 text-truncate small"
+                                 title="{{ $favoriteProduct }}">
+                                {{ $favoriteProduct }}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+            {{-- Orders table --}}
             <div class="card border-0 shadow-sm">
-                <div class="card-header bg-white py-3">
-                    <h6 class="fw-bold mb-0"><i class="bi bi-clock-history me-2"></i>Historial de Pedidos</h6>
+                <div class="card-header bg-white py-3 border-bottom">
+                    <h6 class="fw-bold mb-0">
+                        <i class="bi bi-clock-history me-2 text-danger"></i>Historial de Pedidos
+                    </h6>
                 </div>
-                <div class="card-body p-0">
-                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+
+                {{-- Desktop table --}}
+                <div class="d-none d-sm-block">
+                    <div class="table-responsive" style="max-height:380px;overflow-y:auto;">
                         <table class="table table-hover align-middle mb-0">
                             <thead class="table-light sticky-top">
                                 <tr>
@@ -89,27 +124,76 @@
                                 @forelse($orders as $order)
                                     <tr>
                                         <td class="ps-4">
-                                            {{ $order->created_at->format('d/m/Y') }} <br>
+                                            {{ $order->created_at->format('d/m/Y') }}<br>
                                             <small class="text-muted">{{ $order->created_at->format('H:i') }}</small>
                                         </td>
-                                        <td><span class="badge bg-light text-dark border">#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</span></td>
-                                        <td>{{ $order->table->name ?? 'Barra' }}</td>
-                                        <td class="text-end pe-4 fw-bold">S/ {{ number_format($order->total, 2) }}</td>
                                         <td>
-                                            <a href="{{ route('sales.ticket', $order->id) }}" target="_blank" class="btn btn-sm btn-link text-dark"><i class="bi bi-printer"></i></a>
+                                            <span class="badge bg-light text-dark border">
+                                                #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}
+                                            </span>
+                                        </td>
+                                        <td>{{ $order->table->name ?? 'Barra' }}</td>
+                                        <td class="text-end pe-4 fw-bold text-danger">
+                                            S/ {{ number_format($order->total, 2) }}
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('sales.ticket', $order->id) }}"
+                                               target="_blank"
+                                               class="btn btn-sm btn-link text-dark">
+                                                <i class="bi bi-printer"></i>
+                                            </a>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center py-5 text-muted">Aún no tiene pedidos registrados.</td>
+                                        <td colspan="5" class="text-center py-5 text-muted">
+                                            <i class="bi bi-receipt fs-1 d-block mb-2 opacity-25"></i>
+                                            Aún no tiene pedidos registrados.
+                                        </td>
                                     </tr>
                                 @endforelse
                             </tbody>
                         </table>
                     </div>
                 </div>
-            </div>
 
+                {{-- Mobile cards --}}
+                <div class="d-sm-none p-3">
+                    @forelse($orders as $order)
+                        <div class="card border mb-2 shadow-none">
+                            <div class="card-body py-2 px-3">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <div class="fw-bold small">
+                                            #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}
+                                            · {{ $order->table->name ?? 'Barra' }}
+                                        </div>
+                                        <div class="text-muted" style="font-size:.72rem;">
+                                            {{ $order->created_at->format('d/m/Y H:i') }}
+                                        </div>
+                                    </div>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <span class="fw-bold text-danger">
+                                            S/{{ number_format($order->total, 2) }}
+                                        </span>
+                                        <a href="{{ route('sales.ticket', $order->id) }}"
+                                           target="_blank"
+                                           class="btn btn-sm btn-outline-dark">
+                                            <i class="bi bi-printer"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="text-center py-4 text-muted">
+                            <i class="bi bi-receipt fs-1 d-block mb-2 opacity-25"></i>
+                            Sin pedidos registrados.
+                        </div>
+                    @endforelse
+                </div>
+
+            </div>
         </div>
     </div>
 </div>
