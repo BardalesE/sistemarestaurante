@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-    <title>Iniciar Sesión – Restaurante POS</title>
+    <title>Recuperar Contraseña – Restaurante POS</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -57,7 +57,7 @@
             box-shadow: 0 0 0 3px rgba(192,57,43,.15);
         }
 
-        .btn-login {
+        .btn-brand {
             background: var(--brand);
             border: none;
             color: white;
@@ -68,13 +68,31 @@
             letter-spacing: .3px;
             transition: all .2s;
         }
-        .btn-login:hover {
+        .btn-brand:hover {
             background: #a93226;
             color: white;
             transform: translateY(-1px);
             box-shadow: 0 6px 16px rgba(192,57,43,.35);
         }
-        .btn-login:active { transform: translateY(0); }
+        .btn-brand:active { transform: translateY(0); }
+
+        .back-link {
+            color: var(--brand);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: .875rem;
+            transition: opacity .2s;
+        }
+        .back-link:hover { opacity: .75; color: var(--brand); }
+
+        .info-box {
+            background: #fef9f9;
+            border: 1.5px solid #f5c6cb;
+            border-radius: 10px;
+            padding: .85rem 1rem;
+            font-size: .85rem;
+            color: #6b7280;
+        }
 
         @media (max-width: 400px) {
             .login-card .card-body { padding: 1.5rem; }
@@ -85,7 +103,6 @@
 
 <div class="login-wrapper">
 
-    {{-- Logo / Brand --}}
     <div class="text-center mb-4">
         <div class="login-logo"><i class="bi bi-shop"></i></div>
         <h4 class="fw-bold text-white mb-1">Restaurante POS</h4>
@@ -94,8 +111,13 @@
 
     <div class="login-card">
         <div class="card-body">
-            <h5 class="fw-bold text-dark text-center mb-1">Bienvenido de nuevo</h5>
-            <p class="text-muted text-center small mb-4">Ingresa tus credenciales para continuar</p>
+            <div class="text-center mb-4">
+                <div class="mb-3">
+                    <span style="font-size:2.5rem;">🔐</span>
+                </div>
+                <h5 class="fw-bold text-dark mb-1">¿Olvidaste tu contraseña?</h5>
+                <p class="text-muted small mb-0">Ingresa tu correo y te enviaremos un enlace para restablecerla.</p>
+            </div>
 
             @if(session('status'))
                 <div class="alert border-0 rounded-3 small mb-4"
@@ -112,10 +134,10 @@
                 </div>
             @endif
 
-            <form action="{{ route('login.perform') }}" method="POST">
+            <form action="{{ route('password.email') }}" method="POST">
                 @csrf
 
-                <div class="mb-3">
+                <div class="mb-4">
                     <label for="email" class="form-label fw-bold text-dark small">
                         <i class="bi bi-envelope me-1"></i>Correo Electrónico
                     </label>
@@ -133,33 +155,20 @@
                     @enderror
                 </div>
 
-                <div class="mb-4">
-                    <div class="d-flex justify-content-between align-items-center mb-1">
-                        <label for="password" class="form-label fw-bold text-dark small mb-0">
-                            <i class="bi bi-lock me-1"></i>Contraseña
-                        </label>
-                        <a href="{{ route('password.request') }}"
-                           class="small text-decoration-none"
-                           style="color: var(--brand); font-weight: 600;">
-                            ¿Olvidaste tu contraseña?
-                        </a>
-                    </div>
-                    <input type="password"
-                           class="form-control"
-                           id="password"
-                           name="password"
-                           required
-                           placeholder="••••••••"
-                           autocomplete="current-password">
+                <div class="d-grid mb-3">
+                    <button type="submit" class="btn btn-brand">
+                        <i class="bi bi-send me-2"></i>ENVIAR ENLACE DE RECUPERACIÓN
+                    </button>
                 </div>
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-login">
-                        <i class="bi bi-box-arrow-in-right me-2"></i>INGRESAR AL SISTEMA
-                    </button>
+                <div class="text-center">
+                    <a href="{{ route('login') }}" class="back-link">
+                        <i class="bi bi-arrow-left me-1"></i>Volver al inicio de sesión
+                    </a>
                 </div>
             </form>
         </div>
+
         <div class="border-top text-center py-3">
             <small class="text-muted">Desarrollado con Laravel & Bootstrap</small>
         </div>
