@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\InventoryLog;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -173,6 +174,18 @@ class ProductController extends Controller
 
     public function destroy(Product $product)
     {
+        $enUso = Order::where('status', 'pending')
+            ->whereHas('details', fn($q) => $q->where('product_id', $product->id))
+            ->exists();
+
+        if ($enUso) {
+            return redirect()->back()->with('error', 'No se puede eliminar: el producto está en una orden activa. Desactívalo en su lugar.');
+        }
+
+        if ($product->image) {
+            Storage::disk('public')->delete($product->image);
+        }
+
         $product->delete();
         return redirect()->back()->with('success', 'Producto eliminado.');
     }

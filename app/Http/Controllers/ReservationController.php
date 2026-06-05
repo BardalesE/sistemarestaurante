@@ -25,14 +25,15 @@ class ReservationController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'client_name' => 'required',
-            // CORRECCIÓN: Quitamos 'after:now' para evitar problemas de zona horaria
-            'reservation_time' => 'required|date', 
-            'people' => 'required|integer|min:1',
-            'table_id' => 'nullable|exists:tables,id'
+            'client_name'      => 'required|string|max:255',
+            'reservation_time' => 'required|date',
+            'people'           => 'required|integer|min:1|max:200',
+            'table_id'         => 'nullable|exists:tables,id',
+            'phone'            => 'nullable|string|max:20',
+            'note'             => 'nullable|string|max:500',
         ]);
 
-        Reservation::create($request->all());
+        Reservation::create($request->only(['client_name', 'phone', 'reservation_time', 'people', 'table_id', 'note']));
 
         return redirect()->back()->with('success', 'Reserva agendada correctamente.');
     }

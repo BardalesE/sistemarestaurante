@@ -27,7 +27,9 @@ class CheckRole
             return $next($request);
         }
 
-        // Si no tiene permiso, error 403 o redirigir
-        abort(403, 'No tienes permiso para acceder a esta sección.');
+        // Redirigir al área que le corresponde con mensaje amable
+        $fallback = in_array($user->role, ['waiter', 'cashier']) ? 'pos.index' : 'login';
+        return redirect()->route($fallback)
+            ->with('error', 'No tienes permiso para acceder a esa sección.');
     }
 }

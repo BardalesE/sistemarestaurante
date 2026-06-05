@@ -25,9 +25,9 @@ class OrderDetail extends Model
         return $this->belongsTo(Order::class);
     }
 
-    // Relación: Pertenece a un Producto
+    // withTrashed() para que el historial muestre productos aunque estén eliminados
     public function product()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(Product::class)->withTrashed();
     }
 }

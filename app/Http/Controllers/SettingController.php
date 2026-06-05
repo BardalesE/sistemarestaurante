@@ -6,6 +6,7 @@ use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\Cache;
 
 class SettingController extends Controller
 {
@@ -48,6 +49,10 @@ class SettingController extends Controller
             $path = $request->file('company_logo')->store('settings', 'public');
             Setting::updateOrCreate(['key' => 'company_logo'], ['value' => $path]);
         }
+
+        // Invalidar caché de configuraciones modificadas
+        Cache::forget('setting.currency_symbol');
+        Cache::forget('setting.timezone');
 
         return redirect()->back()->with('success', 'Configuración actualizada. La hora se ajustará en la próxima carga.');
     }

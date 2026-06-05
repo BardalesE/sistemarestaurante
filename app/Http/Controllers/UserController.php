@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Database\QueryException;
 
 class UserController extends Controller
 {
@@ -49,8 +50,8 @@ class UserController extends Controller
             'role' => $request->role
         ];
 
-        // Solo actualizamos contraseña si el campo no está vacío
         if ($request->filled('password')) {
+            $request->validate(['password' => 'min:6']);
             $data['password'] = Hash::make($request->password);
         }
 
@@ -65,9 +66,11 @@ class UserController extends Controller
             return redirect()->back()->with('error', 'No puedes eliminar tu propia cuenta mientras estás conectado.');
         }
 
-        // Opcional: Verificar si tiene ventas asociadas antes de borrar, 
-        // pero por simplicidad permitimos borrar (el historial queda con ID huerfano o se maneja en BD)
-        $user->delete();
+        try {
+            $user->delete();
+        } catch (QueryException $e) {
+            return redirect()->back()->with('error', 'No se puede eliminar: el usuario tiene ventas registradas. Desactívalo en su lugar.');
+        }
 
         return redirect()->back()->with('success', 'Usuario eliminado del sistema.');
     }

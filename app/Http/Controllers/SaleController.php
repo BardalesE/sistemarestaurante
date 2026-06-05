@@ -38,8 +38,8 @@ class SaleController extends Controller
 
         $totalExpenses = $expenses->sum('amount');
 
-        // 4. Balance Final
-        $balance = $totalCash - $totalExpenses;
+        // 4. Balance Final (ventas totales menos gastos del período)
+        $balance = $totalSales - $totalExpenses;
 
         return view('sales.index', compact(
             'orders', 'expenses', 'startDate', 'endDate', 
@@ -80,7 +80,7 @@ class SaleController extends Controller
         }
 
         $stats['total'] = $stats['cash'] + $stats['card'];
-        $stats['balance'] = $stats['cash'] - $stats['expenses'];
+        $stats['balance'] = $stats['total'] - $stats['expenses'];
 
         $settings = Setting::pluck('value', 'key')->toArray();
 

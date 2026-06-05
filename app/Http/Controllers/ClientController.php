@@ -22,8 +22,16 @@ class ClientController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(['name' => 'required', 'document_number' => 'nullable|unique:clients']);
-        Client::create($request->all());
+        $request->validate([
+            'name'            => 'required|string|max:255',
+            'document_number' => 'nullable|string|max:20|unique:clients',
+            'phone'           => 'nullable|string|max:20',
+            'email'           => 'nullable|email|max:255',
+            'address'         => 'nullable|string|max:255',
+            'notes'           => 'nullable|string|max:500',
+        ]);
+
+        Client::create($request->only(['name', 'document_number', 'phone', 'email', 'address', 'notes']));
         return redirect()->route('clients.index')->with('success', 'Cliente registrado.');
     }
 
@@ -70,8 +78,16 @@ class ClientController extends Controller
 
     public function update(Request $request, Client $client)
     {
-        $request->validate(['name' => 'required', 'document_number' => 'nullable|unique:clients,document_number,'.$client->id]);
-        $client->update($request->all());
+        $request->validate([
+            'name'            => 'required|string|max:255',
+            'document_number' => 'nullable|string|max:20|unique:clients,document_number,' . $client->id,
+            'phone'           => 'nullable|string|max:20',
+            'email'           => 'nullable|email|max:255',
+            'address'         => 'nullable|string|max:255',
+            'notes'           => 'nullable|string|max:500',
+        ]);
+
+        $client->update($request->only(['name', 'document_number', 'phone', 'email', 'address', 'notes']));
         return redirect()->route('clients.index')->with('success', 'Datos actualizados.');
     }
 
